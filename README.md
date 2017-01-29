@@ -1,4 +1,17 @@
+#What's this?
+
+I need to train object detector using my own data, so I am trying to modify the original repository so that I can train on my own dataset.
+
+To DOs:
+- change the dataset class so that I can use my own dataste.
+- change training scheme into image based from object based. 
+- remove trainer and make it easy to unerstand. 
+- replace VGG16 into ResNet50
+
+
+
 # Faster R-CNN
+
 
 This is an experimental implementation of Faster R-CNN using Chainer based on Ross Girshick's [py-faster-rcnn codes](https://github.com/rbgirshick/py-faster-rcnn).
 
