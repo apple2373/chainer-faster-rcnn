@@ -3,9 +3,9 @@
 I need to train object detector using my own data, so I am trying to modify the original repository so that I can train on my own dataset.
 
 To DOs:
-- change the dataset class so that I can use my own dataste.
+- change the dataset so that I can use my own dataset.
 - change training scheme into image based from object based. 
-- remove trainer and make it easy to unerstand. 
+- remove trainer and make it easy to understand. 
 - replace VGG16 into ResNet50
 
 
