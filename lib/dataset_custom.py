@@ -23,6 +23,9 @@ class DatasetObjectDetection(chainer.dataset.DatasetMixin):
         self.mean = np.array([[[103.939, 116.779, 123.68]]])  # BGR VGG mean
         self.img_dir = img_dir
         self.objects=json.load(open(json_file))
+        self.index_count=0
+        self.random_indicies=np.random.permutation(len(self.objects))
+        self.epoch=1
 
     def __len__(self):
         return len(self.objects)
@@ -56,6 +59,22 @@ class DatasetObjectDetection(chainer.dataset.DatasetMixin):
 
         return img, im_info, gt_boxes
 
+    def get_batch(self, batch_size=1):
+        batch_indicies=self.random_indicies[self.index_count:self.index_count+batch_size]
+        self.index_count+=batch_size
+        if self.index_count > len(self.objects):
+            self.epoch+=1
+            self.suffle_data()
+            self.index_count=0
+        img, im_info, gt_boxes=self.get_example(batch_indicies[0])
+        img=np.array([img])
+        im_info=np.array([im_info])
+        gt_boxes=np.array([gt_boxes])
+        
+        return img, im_info, gt_boxes
+
+    def suffle_data(self):
+        self.random_indicies = np.random.permutation(len(self.objects))
 
 if __name__ == '__main__':
     dataset = DatasetObjectDetection("../data/VOCdevkit/VOC2007/JPEGImages/","../data/voc_train.json")

@@ -42,18 +42,19 @@ class FasterRCNN(chainer.Chain):
         self.proposal_target_layer = ProposalTargetLayer(num_classes)
 
     def __call__(self, x, im_info, gt_boxes=None):
+        if self.gpu >= 0: 
+            x = chainer.cuda.cupy.array(x)
         h = self.trunk(x)
-        if chainer.cuda.available \
-                and isinstance(im_info, chainer.cuda.cupy.ndarray):
+        if not self.train and chainer.cuda.available and isinstance(im_info, chainer.cuda.cupy.ndarray):
             im_info = chainer.cuda.cupy.asnumpy(im_info)
         if self.train:
-            im_info = im_info.data
-            gt_boxes = gt_boxes.data
+            if isinstance(im_info,chainer.Variable):
+                im_info = im_info.data
+            if isinstance(gt_boxes,chainer.Variable):
+                gt_boxes = gt_boxes.data
             if isinstance(gt_boxes, chainer.cuda.cupy.ndarray):
-                im_info = chainer.cuda.cupy.asnumpy(im_info)
                 gt_boxes = chainer.cuda.cupy.asnumpy(gt_boxes)
-            rpn_cls_loss, rpn_loss_bbox, rois = self.RPN(
-                h, im_info, self.gpu, gt_boxes)
+            rpn_cls_loss, rpn_loss_bbox, rois = self.RPN(h, im_info, self.gpu, gt_boxes)
         else:
             rois = self.RPN(h, im_info, self.gpu, gt_boxes)
 
@@ -99,10 +100,10 @@ class FasterRCNN(chainer.Chain):
                 bbox_pred, bbox_targets, bbox_inside_weights,
                 bbox_outside_weights, self.sigma)
 
-            reporter.report({'rpn_loss_cls': rpn_cls_loss,
-                             'rpn_loss_bbox': rpn_loss_bbox,
-                             'loss_bbox': loss_bbox,
-                             'loss_cls': loss_cls}, self)
+            # reporter.report({'rpn_loss_cls': rpn_cls_loss,
+            #                  'rpn_loss_bbox': rpn_loss_bbox,
+            #                  'loss_bbox': loss_bbox,
+            #                  'loss_cls': loss_cls}, self)
 
             return rpn_cls_loss, rpn_loss_bbox, loss_bbox, loss_cls
         else:
