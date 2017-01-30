@@ -5,10 +5,7 @@
 
 import chainer
 from chainer import iterators
-from chainer import training
-from chainer.training import extensions
 from lib.dataset_custom import DatasetObjectDetection
-from updater import ParallelUpdater
 from utils.prepare_train import create_args
 from utils.prepare_train import create_logger
 from utils.prepare_train import create_result_dir
