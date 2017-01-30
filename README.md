@@ -7,7 +7,7 @@ To DOs:
 - change training scheme into image based from object based. 
 - remove trainer and make it easy to understand. 
 - replace VGG16 into ResNet50
-
+- add evaluation module. (i.e. mean average precision)
 
 
 # Faster R-CNN
